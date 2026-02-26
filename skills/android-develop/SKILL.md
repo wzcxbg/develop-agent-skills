@@ -1,9 +1,9 @@
 ---
-name: android-kotlin
+name: android-develop
 description: Android Kotlin development with Coroutines, Jetpack Compose, Koin, and MockK testing
 ---
 
-# Android Kotlin Skill
+# Android Develop Skill
 
 ---
 
