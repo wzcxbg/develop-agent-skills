@@ -1,6 +1,6 @@
 ---
 name: android-kotlin
-description: Android Kotlin development with Coroutines, Jetpack Compose, Hilt, and MockK testing
+description: Android Kotlin development with Coroutines, Jetpack Compose, Koin, and MockK testing
 ---
 
 # Android Kotlin Skill
@@ -19,7 +19,7 @@ project/
 │   │   │   │   │   ├── local/          # Room database
 │   │   │   │   │   ├── remote/         # Retrofit/Ktor services
 │   │   │   │   │   └── repository/     # Repository implementations
-│   │   │   │   ├── di/                 # Hilt modules
+│   │   │   │   ├── di/                 # Koin modules
 │   │   │   │   ├── domain/             # Business logic
 │   │   │   │   │   ├── model/          # Domain models
 │   │   │   │   │   ├── repository/     # Repository interfaces
@@ -51,7 +51,6 @@ project/
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
 }
 
@@ -110,10 +109,9 @@ dependencies {
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
-    // Hilt
-    implementation("com.google.dagger:hilt-android:2.50")
-    ksp("com.google.dagger:hilt-compiler:2.50")
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    // Koin
+    implementation("io.insert-koin:koin-android:3.5.3")
+    implementation("io.insert-koin:koin-androidx-compose:3.5.3")
 
     // Room
     implementation("androidx.room:room-runtime:2.6.1")
@@ -125,6 +123,7 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.9")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     testImplementation("app.cash.turbine:turbine:1.0.0")
+    testImplementation("io.insert-koin:koin-test:3.5.3")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
@@ -138,8 +137,7 @@ dependencies {
 
 ### ViewModel with StateFlow
 ```kotlin
-@HiltViewModel
-class UserViewModel @Inject constructor(
+class UserViewModel(
     private val getUserUseCase: GetUserUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -191,7 +189,7 @@ interface UserRepository {
     suspend fun saveUser(user: User)
 }
 
-class UserRepositoryImpl @Inject constructor(
+class UserRepositoryImpl(
     private val api: UserApi,
     private val dao: UserDao,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
@@ -225,7 +223,7 @@ class UserRepositoryImpl @Inject constructor(
 ```kotlin
 @Composable
 fun UserScreen(
-    viewModel: UserViewModel = hiltViewModel(),
+    viewModel: UserViewModel = koinViewModel(),
     onNavigateBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -294,6 +292,40 @@ private fun UserScreenContent(
 
 ## Sealed Classes for State
 
+---
+
+## Koin Dependency Injection
+
+### Koin Modules
+```kotlin
+val appModule = module {
+    single<UserRepository> { UserRepositoryImpl(get(), get()) }
+    factory { GetUserUseCase(get()) }
+    viewModel { params -> UserViewModel(get(), params.get()) }
+}
+
+val networkModule = module {
+    single { Retrofit.Builder()...build().create(UserApi::class.java) }
+}
+```
+
+### Application Class
+```kotlin
+class App : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        startKoin {
+            androidContext(this@App)
+            modules(appModule, networkModule)
+        }
+    }
+}
+```
+
+---
+
+## Sealed Classes for State
+
 ### Result Wrapper
 ```kotlin
 sealed interface Result<out T> {
@@ -323,20 +355,22 @@ class UserViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val getUserUseCase: GetUserUseCase = mockk()
+    private val getUserUseCase: GetUserUseCase = mockk(relaxed = true)
     private val savedStateHandle = SavedStateHandle(mapOf("userId" to "123"))
 
     private lateinit var viewModel: UserViewModel
 
     @Before
     fun setup() {
-        viewModel = UserViewModel(getUserUseCase, savedStateHandle)
+        // MockK setup
     }
 
     @Test
     fun `loadUser success updates state with user`() = runTest {
         val user = User("123", "John Doe", "john@example.com")
         coEvery { getUserUseCase("123") } returns flowOf(user)
+        
+        viewModel = UserViewModel(getUserUseCase, savedStateHandle)
 
         viewModel.uiState.test {
             val initial = awaitItem()
@@ -362,6 +396,26 @@ class MainDispatcherRule(
     }
     override fun finished(description: Description) {
         Dispatchers.resetMain()
+    }
+}
+```
+
+---
+
+### Integration Test with Koin
+```kotlin
+class UserIntegrationTest : KoinTest {
+
+    private val userRepository: UserRepository by inject()
+
+    @get:Rule
+    val koinTestRule = KoinTestRule.create {
+        modules(appModule, networkModule)
+    }
+
+    @Test
+    fun `repository is injected correctly`() {
+        assertNotNull(userRepository)
     }
 }
 ```
