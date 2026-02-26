@@ -1,64 +1,25 @@
 # Agent Skills Repository
 
-This repository contains a collection of skills for AI agents, following the [Agent Skills](https://agentskills.io) standard.
+本仓库提供了一系列标准化的 AI Agent 技能 (Skills)，旨在增强 Agent 在特定领域的开发能力。遵循 [Agent Skills](https://agentskills.io) 标准。
 
-## Structure
+## 技能列表
 
-- `skills/`: Contains the source code for each skill.
-- `tests/`: Contains unit tests for the skills.
-- `docs/`: Documentation.
+| Skill 名称 | 描述 |
+| :--- | :--- |
+| `android-kotlin` | 提供 Android Kotlin 开发的最佳实践、架构规范 (Clean Architecture, MVVM)、依赖注入 (Koin) 及测试模版。 |
 
-## Available Skills
+## 安装指南
 
-### Todo List Skill
-
-A simple skill to manage a todo list.
-
-**Features:**
-- Add tasks
-- List tasks
-- Complete tasks
-- Remove tasks
-
-**Installation:**
-
-You can install this skill using the `agent-skills-cli`:
+使用以下命令安装所需技能：
 
 ```bash
-# Install from local directory
-skills add ./skills/todo-list
-
-# Or if hosted on GitHub
-skills add <owner>/<repo> --skill todo-list
+# 安装 Android Kotlin 开发技能
+npx skill add https://github.com/wzcxbg/develop-agent-skills/tree/main/skills/android-kotlin
 ```
 
-**Usage:**
+## 开发与贡献
 
-Once installed, the agent can use the skill by matching the description or explicit invocation.
+欢迎提交 PR 贡献新的 Skill。
 
-Example prompts:
-- "Add 'Buy milk' to my todo list"
-- "Show my todos"
-- "Mark the first task as done"
-
-**Manual Execution:**
-
-You can also run the skill manually:
-
-```bash
-python3 skills/todo-list/scripts/todo_list.py --help
-```
-
-## Development
-
-To create a new skill:
-
-```bash
-skills init <skill-name>
-```
-
-To run tests:
-
-```bash
-python3 -m unittest discover tests
-```
+- **创建新 Skill**: `skills init <skill-name>`
+- **验证 Skill**: `skills validate skills/<skill-name>`
