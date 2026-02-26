@@ -637,4 +637,6 @@ coroutines:
 - ❌ **Not using sealed classes** - Prefer sealed for finite state sets
 - ❌ **Side effects in Composables** - Use `LaunchedEffect`/`SideEffect`
 - ❌ **Unstable Compose parameters** - Use stable/immutable types or `@Stable`
+- ❌ **Not-null assertion (!!)** - Never use `!!`, always use safe call `?.`, elvis operator `?:`, or `requireNotNull`/`checkNotNull` with message
+- ❌ **In-code OptIn annotations** - Do not use `@OptIn(Experimental...)` in code. Configure `freeCompilerArgs` in `build.gradle.kts` instead.
 
