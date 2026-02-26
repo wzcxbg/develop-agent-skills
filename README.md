@@ -16,10 +16,3 @@
 # 安装 Android Kotlin 开发技能
 npx skill add https://github.com/wzcxbg/develop-agent-skills/tree/main/skills/android-kotlin
 ```
-
-## 开发与贡献
-
-欢迎提交 PR 贡献新的 Skill。
-
-- **创建新 Skill**: `skills init <skill-name>`
-- **验证 Skill**: `skills validate skills/<skill-name>`
