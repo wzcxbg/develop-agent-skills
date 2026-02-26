@@ -6,7 +6,7 @@
 
 | Skill 名称 | 描述 |
 | :--- | :--- |
-| `android-develop` | 提供 Android Kotlin 开发的最佳实践、架构规范 (Clean Architecture, MVVM)、依赖注入 (Koin) 及测试模版。 |
+| `android-development` | 提供 Android Kotlin 开发的最佳实践、架构规范 (Clean Architecture, MVVM)、依赖注入 (Koin) 及测试模版。 |
 
 ## 安装指南
 
@@ -14,5 +14,5 @@
 
 ```bash
 # 安装 Android Kotlin 开发技能
-npx skills add https://github.com/wzcxbg/develop-agent-skills --skill android-develop
+npx skills add https://github.com/wzcxbg/develop-agent-skills --skill android-development
 ```
