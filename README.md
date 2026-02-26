@@ -14,5 +14,5 @@
 
 ```bash
 # 安装 Android Kotlin 开发技能
-npx skill add https://github.com/wzcxbg/develop-agent-skills/tree/main/skills/android-kotlin
+npx skills add https://github.com/wzcxbg/develop-agent-skills --skill android-kotlin
 ```
