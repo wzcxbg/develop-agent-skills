@@ -73,6 +73,9 @@ preference = "1.2.1"
 media3 = "1.3.0"
 jsoup = "1.17.2"
 zxing = "3.5.3"
+json = "20231013"
+coroutinesTest = "1.7.3"
+mockk = "1.13.8"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -110,6 +113,7 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 google-gson = { group = "com.google.code.gson", name = "gson", version = "2.10.1" }
 zxing = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
+jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
 
 androidx-media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3" }
 androidx-media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "media3" }
@@ -122,6 +126,9 @@ koin-androidx-workmanager = { group = "io.insert-koin", name = "koin-androidx-wo
 koin-androidx-startup = { group = "io.insert-koin", name = "koin-androidx-startup", version.ref = "koin" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+org-json = { group = "org.json", name = "json", version.ref = "json" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 
@@ -168,13 +175,13 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     
     kotlin {
         compilerOptions {
-            jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+            jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
             allWarningsAsErrors.set(true)
             freeCompilerArgs.addAll(
                 "-opt-in=org.koin.core.annotation.KoinExperimentalAPI",
@@ -225,7 +232,7 @@ dependencies {
     // Image & Utils
     implementation(libs.coil.compose)
     implementation(libs.zxing)
-    implementation("org.jsoup:jsoup:1.17.2")
+    implementation(libs.jsoup)
 
     // Media
     implementation(libs.androidx.media3.exoplayer)
@@ -241,9 +248,9 @@ dependencies {
 
     // Testing
     testImplementation(libs.junit)
-    testImplementation("org.json:json:20231013")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
-    testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation(libs.org.json)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
     testImplementation(libs.androidx.room.testing)
     
     androidTestImplementation(libs.androidx.junit)
