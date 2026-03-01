@@ -13,6 +13,5 @@
 使用以下命令安装所需技能：
 
 ```bash
-# 安装 Android Kotlin 开发技能
 npx skills add https://github.com/wzcxbg/develop-agent-skills --skill android-development
 ```
