@@ -4,6 +4,18 @@ xtdata是xtquant库中提供行情相关数据的模块，本模块旨在提供�
 
 主要提供行情数据（历史和实时的K线和分笔）、财务数据、合约基础信息、板块和行业分类信息等通用的行情数据。
 
+## 当前券商 MiniQMT 运行时不支持的函数
+
+以下结论来自本地虚拟环境连接当前已打开的券商 MiniQMT 后实测。验证到的服务信息为 `tag=sp3`、`version=1.0`，服务地址为 `127.0.0.1:58610`。这里的“不可用”不是单纯指 Python 模块里没有函数，而是包括“函数入口存在，但当前券商 MiniQMT 服务端调用返回不支持”。
+
+| 函数 | 状态 | 实测结果 |
+| --- | --- | --- |
+| `get_trading_calendar(market, start_time='', end_time='')` | 当前券商 MiniQMT 运行时不支持 | 函数入口存在，但调用 `get_trading_calendar('SH')` 返回 `RuntimeError: 当前客户端未支持此功能，请更新客户端或升级投研版 ... ErrorID 300000 ... function not realize`。 |
+| `get_period_list()` | 当前券商 MiniQMT 运行时不支持 | 函数入口存在，但调用返回 `RuntimeError: 当前客户端未支持此功能，请更新客户端或升级投研版 ... ErrorID 300000 ... function not realize`。 |
+| `get_trading_time(stockcode)` | 当前 xtquant 包中无入口 | `xtquant.xtdata` 模块中不存在该函数。 |
+
+替代建议：交易日列表优先尝试 `get_trading_dates(market, start_time='', end_time='', count=-1)`；周期列表按本文“常用类型说明”中的常用周期手动选择。
+
 ## 接口概述
 
 ### 运行逻辑
